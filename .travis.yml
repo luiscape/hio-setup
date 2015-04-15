@@ -1,11 +1,11 @@
 language: python
-
+sudo: required
 python:
   - "2.7"
 
 # command to install dependencies
 install:
-  - bash setup.sh
+  - ./setup.sh
 
 # run coverage + tests
 script:
@@ -15,6 +15,7 @@ script:
 # issue coverage report
 after_success:
   - coveralls
+  - killall rethinkdb
 
 # for email notifications
 notifications:
