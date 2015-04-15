@@ -5,17 +5,16 @@ python:
 
 # command to install dependencies
 install:
+  - pip install coveralls
   - ./setup.sh
 
 # run coverage + tests
 script:
-  - ./test.sh
+  - nosetests --with-coverage
 
 # issue coverage report
 after_success:
-  - nosetests --with-coverage
   - coveralls
-  - killall rethinkdb
 
 # for email notifications
 notifications:
