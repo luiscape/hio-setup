@@ -1,7 +1,7 @@
 ## H.io Setup
 Scripts to setup [Humanitarian.io](http://humanitarian.io).
 
-!img[Travis](https://travis-ci.org/luiscape/hio-setup.svg?branch=master)
+[![Build Status](https://travis-ci.org/luiscape/hio-setup.svg?branch=master)](https://travis-ci.org/luiscape/hio-setup)
 
 ## Usage
 If you are on an `unix` system, run:
