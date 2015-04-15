@@ -19,4 +19,4 @@ virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-python $SCRIPTS_PATH/setup.py
+python $SCRIPTS_PATH/setup_db.py
