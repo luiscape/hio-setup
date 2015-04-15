@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Config
+SCRIPTS_PATH="scripts"
+
 ## Making the terminal more welcoming.
 export PS1="digital-\[\e[01;36m\]\u\[\e[0m\]\[\e[00;37m\] : \W \\$ \[\e[0m\]"
 
@@ -15,4 +18,4 @@ virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-python setup.py
+python $SCRIPTS_PATH/setup.py
