@@ -11,7 +11,8 @@ apt-get update
 apt-get install rethinkdb
 apt-get install screen
 
-screen rethinkdb
+## Configuring rethinkdb.
+# screen rethinkdb
 
 ## Installing Python dependencies.
 virtualenv venv
