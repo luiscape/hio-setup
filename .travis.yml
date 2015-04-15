@@ -9,7 +9,7 @@ install:
 
 # run coverage + tests
 script:
-  - coverage report -m
+  # - coverage report -m
   - ./test.sh
 
 # issue coverage report
