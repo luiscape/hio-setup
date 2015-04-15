@@ -1,2 +1,4 @@
 venv/*
 venv/**
+rethinkdb_data/*
+rethinkdb_data/**
