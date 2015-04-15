@@ -7,10 +7,10 @@ SCRIPTS_PATH="scripts"
 export PS1="digital-\[\e[01;36m\]\u\[\e[0m\]\[\e[00;37m\] : \W \\$ \[\e[0m\]"
 
 ## Installing database
-source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rethinkdb.list
+sudo source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rethinkdb.list
 wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | apt-key add -
-apt-get update
-apt-get install rethinkdb
+sudo apt-get update
+sudo apt-get install rethinkdb
 
 ## Installing utilities
 apt-get install python-virtualenv
