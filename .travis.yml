@@ -1,0 +1,21 @@
+language: python
+
+python:
+  - "2.7"
+
+# command to install dependencies
+install:
+  - bash setup.sh
+
+# run coverage + tests
+script:
+  - coverage report -m
+  - ./test.sh
+
+# issue coverage report
+after_success:
+  - coveralls
+
+# for email notifications
+notifications:
+    email: false
