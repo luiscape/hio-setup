@@ -8,14 +8,14 @@ install:
   - pip install coveralls
   - ./setup.sh
 
-# run coverage + tests
+# run tests + coverage
 script:
-  - nosetests --with-coverage
+  - ./test.sh
 
-# issue coverage report
+# send coverage report to coveralls.io
 after_success:
   - coveralls
 
-# for email notifications
+# email notifications
 notifications:
     email: false
