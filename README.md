@@ -12,5 +12,8 @@ $ ./setup.sh
 ## Tests
 To run test, do:
 ```shell
-$ ./test.sh
+$ source venv/bin/activate
+$ nosetests --with-coverage
 ```
+
+Make sure you have the `requirements.txt` installed.
