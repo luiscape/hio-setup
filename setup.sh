@@ -7,12 +7,19 @@ SCRIPTS_PATH="scripts"
 export PS1="digital-\[\e[01;36m\]\u\[\e[0m\]\[\e[00;37m\] : \W \\$ \[\e[0m\]"
 
 ## Installing database
-sudo apt-get update -qq
-sudo apt-get install rethinkdb -y
-sudo apt-get install screen -y
+source /etc/lsb-release && echo "deb http://download.rethinkdb.com/apt $DISTRIB_CODENAME main" | tee /etc/apt/sources.list.d/rethinkdb.list
+wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | apt-key add -
+apt-get update
+apt-get install rethinkdb
 
-## Configuring rethinkdb.
-sudo rethinkdb --io-threads 2048 --daemon
+## Installing utilities
+apt-get install python-virtualenv
+apt-get install screen
+apt-get install tree
+apt-get install git
+
+## Running rethinkdb server.
+rethinkdb --io-threads 2048 --daemon
 ulimit -S -n 2048
 sleep 10
 
@@ -21,4 +28,5 @@ virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
+## Setting-up database.
 python $SCRIPTS_PATH/setup_db.py
