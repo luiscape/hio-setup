@@ -16,7 +16,6 @@ def DbConnection(port, host):  # default
 
   except Exception as e:
     print "Could not connect to RethinkDb on port %s" % port
-    print e
     return False
 
 db = LoadConfig()['database'][0]

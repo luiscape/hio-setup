@@ -61,7 +61,7 @@ class CheckConfigurationWorks(unittest.TestCase):
 
 class CheckDatabaseCreationWorks(unittest.TestCase):
   '''Unit tests for the setup of RethinkDB.'''
-  
+
   ## Test function works.
   def test_wrapper(self):
     assert SB.Main(t=True, v=True) == True
@@ -70,11 +70,13 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
   def test_db_connection(self):
     db = Config.LoadConfig()['database'][0]
     assert SB.DbConnection(db['port_dev'], db['host_dev']) != False
+    assert SB.DbConnection('foo', 'bar') == False
 
   ## Testing db setup.
   def test_table_creation(self):
     database_config = Config.LoadConfig()['database'][0]
     assert SB.CreateDatabase('hio_main') == True
+    assert SB.CreateDatabase('hio_main') == True  # 2nd time
     assert SB.CreateDatabase('~~~~~~~~') == False
 
   def test_table_drop(self):
@@ -96,6 +98,7 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
   def test_create_table_works(self):
     db = Config.LoadConfig()['database'][0]
     assert SB.CreateTables(db) != False
+    assert SB.CreateTables(db) != False  # 2nd time
 
   def test_create_table_fail(self):
     db = Config.LoadConfig()['database'][0]
@@ -104,8 +107,8 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
 
   def test_that_data_load_function_works(self):
     db = Config.LoadConfig()['database'][0]
-    assert SB.LoadTestData('ebola-data-db-format.csv', db) == True
-    assert SB.LoadTestData('xxxxx.csv', db) == False
+    assert SB.LoadTestData('ebola-data-db-format.csv', db, True) == True
+    assert SB.LoadTestData('xxxxx.csv', db, True) == False
 
   def test_that_record_writting_fail_gracefully(self):
     db = Config.LoadConfig()['database'][0]
