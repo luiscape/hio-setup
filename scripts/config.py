@@ -17,11 +17,12 @@ def LoadConfig(j = 'config.json'):
   except Exception as e:
     print "Could not load configuration."
     print e
+    return False
 
 
 def Main():
   LoadConfig()
-
+  return True
 
 if __name__ == '__main__':
   Main()

@@ -53,7 +53,6 @@ def CreateDatabase(name, v = False):
 
   except Exception as e:
     print "Could not create database."
-    print e
     return False
 
 
@@ -80,7 +79,6 @@ def CreateTables(db, v = False):
 
       except Exception as e:
         print "Could not create table `%s`." % t['id']
-        print e
         return False
 
 
@@ -98,13 +96,11 @@ def LoadTestData(file, db, v = False):
 
   except Exception as e:
     print "Couldn't load test data."
-    print e
     return False
 
 
   ## Storing in db.
   try:
-
     # Checking for existing records.
     n = r.db(db['name']).table('values').count().run(conn)
     if n > 0:
@@ -117,9 +113,7 @@ def LoadTestData(file, db, v = False):
 
   except Exception as e:
     print "Could not insert data into database."
-    print e
     return False
-
 
 
 
@@ -133,6 +127,7 @@ def Main(t = True, v = False):
 
   if v:
     print "Setup ran successfully."
+    return True
 
 
 

@@ -20,6 +20,14 @@ import config as Config
 class CheckConfigurationWorks(unittest.TestCase):
   '''Unit tests for the configuration scripts.'''
 
+
+  ## Structural tests.
+  def test_wrapper_loads_function_correctly(self):
+    assert Config.Main() == True
+
+  def test_that_load_config_fails_gracefully(self):
+    assert Config.LoadConfig('xxx.json') == False
+
   ## Object type tests.
   def test_config_is_dict(self):
     d = Config.LoadConfig('config.json')
@@ -29,7 +37,6 @@ class CheckConfigurationWorks(unittest.TestCase):
     d = Config.LoadConfig('config.json')
     t = d['database'][0]['tables']
     assert type(t) is list
-
 
 
   ## Object atributes tests.
@@ -54,6 +61,10 @@ class CheckConfigurationWorks(unittest.TestCase):
 
 class CheckDatabaseCreationWorks(unittest.TestCase):
   '''Unit tests for the setup of RethinkDB.'''
+  
+  ## Test function works.
+  def test_wrapper(self):
+    assert SB.Main(t=True, v=True) == True
 
   ## Testing connection.
   def test_db_connection(self):
@@ -64,19 +75,44 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
   def test_table_creation(self):
     database_config = Config.LoadConfig()['database'][0]
     assert SB.CreateDatabase('hio_main') == True
+    assert SB.CreateDatabase('~~~~~~~~') == False
 
-  # def test_table_drop(self):
-  #   assert SB.DropTable('test') == True
+  def test_table_drop(self):
+    db_test = [{
+      "database": [{
+        "name": "test",
+        "tables": [{ "id": "test" }],
+        "host_dev": "localhost",
+        "port_dev": 28015
+        }]
+    }]
+    SB.CreateDatabase('test', True)
+    SB.CreateTables(db_test[0]['database'][0], True)
+    assert SB.DropTable('test') == True
+    assert SB.DropTable('xxxx') == False
 
 
+  ## Testing table and record creation.
   def test_create_table_works(self):
     db = Config.LoadConfig()['database'][0]
     assert SB.CreateTables(db) != False
 
+  def test_create_table_fail(self):
+    db = Config.LoadConfig()['database'][0]
+    db['tables'].append({"id": "~~~~~~~"})
+    assert SB.CreateTables(db) == False
 
   def test_that_data_load_function_works(self):
     db = Config.LoadConfig()['database'][0]
     assert SB.LoadTestData('ebola-data-db-format.csv', db) == True
+    assert SB.LoadTestData('xxxxx.csv', db) == False
+
+  def test_that_record_writting_fail_gracefully(self):
+    db = Config.LoadConfig()['database'][0]
+    db['name'] = 'non_existent_table'
+    assert SB.LoadTestData('ebola-data-db-format.csv', db, True) == False
+
+
 
   ## Testing results.
   def test_db_exists(self):
