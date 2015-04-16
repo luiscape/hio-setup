@@ -98,7 +98,7 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
   def test_create_table_works(self):
     db = Config.LoadConfig()['database'][0]
     assert SB.CreateTables(db) != False
-    assert SB.CreateTables(db) != False  # 2nd time
+    assert SB.CreateTables(db, True) != False  # 2nd time
 
   def test_create_table_fail(self):
     db = Config.LoadConfig()['database'][0]
