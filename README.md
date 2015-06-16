@@ -6,14 +6,13 @@ Scripts to setup [Humanitarian.io](http://humanitarian.io).
 ## Usage
 If you are on an `unix` system, run:
 ```shell
-$ ./setup.sh
+$ make setup
 ```
 
 ## Tests
 To run test, do:
 ```shell
-$ source venv/bin/activate
-$ nosetests --with-coverage
+$ make test
 ```
 
 Make sure you have the `requirements.txt` installed.

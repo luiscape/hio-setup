@@ -13,9 +13,15 @@ import unittest
 from mock import patch
 
 # program
-import setup_db as SB
 import rethinkdb as r
-import config as Config
+import config.config as Config
+import config.setup_db as SB
+
+#
+# Variables
+#
+TEST_DATA = 'ebola-data-db-format.csv'
+
 
 class CheckConfigurationWorks(unittest.TestCase):
   '''Unit tests for the configuration scripts.'''
@@ -43,7 +49,7 @@ class CheckConfigurationWorks(unittest.TestCase):
   def test_config_returns_right_n_tables(self):
     d = Config.LoadConfig('config.json')
     t = d['database'][0]['tables']
-    n = 3 
+    n = 3
     assert len(t) == n
 
 
@@ -74,10 +80,11 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
 
   ## Testing db setup.
   def test_table_creation(self):
-    database_config = Config.LoadConfig()['database'][0]
-    assert SB.CreateDatabase('hio_main') == True
-    assert SB.CreateDatabase('hio_main') == True  # 2nd time
-    assert SB.CreateDatabase('~~~~~~~~') == False
+    db = Config.LoadConfig()['database'][0]
+    conn = SB.DbConnection(db['port_dev'], db['host_dev'])
+    assert SB.CreateDatabase('hio_main', conn) == True
+    assert SB.CreateDatabase('hio_main', conn) == True  # 2nd time
+    assert SB.CreateDatabase('~~~~~~~~', conn) == False
 
   def test_table_drop(self):
     db_test = [{
@@ -88,32 +95,36 @@ class CheckDatabaseCreationWorks(unittest.TestCase):
         "port_dev": 28015
         }]
     }]
-    SB.CreateDatabase('test', True)
-    SB.CreateTables(db_test[0]['database'][0], True)
-    assert SB.DropTable('test') == True
-    assert SB.DropTable('xxxx') == False
+    conn = SB.DbConnection(db_test[0]['database'][0]['port_dev'], db_test[0]['database'][0]['host_dev'])
+    SB.CreateDatabase('test', conn, True)
+    SB.CreateTables(db_test[0]['database'][0], conn, True)
+    assert SB.DropTable('test', conn) == True
+    assert SB.DropTable('xxxx', conn) == False
 
 
   ## Testing table and record creation.
   def test_create_table_works(self):
     db = Config.LoadConfig()['database'][0]
-    assert SB.CreateTables(db) != False
-    assert SB.CreateTables(db, True) != False  # 2nd time
+    conn = SB.DbConnection(db['port_dev'], db['host_dev'])
+    assert SB.CreateTables(db, conn) != False
+    assert SB.CreateTables(db, conn, True) != False  # 2nd time
 
   def test_create_table_fail(self):
     db = Config.LoadConfig()['database'][0]
     db['tables'].append({"id": "~~~~~~~"})
-    assert SB.CreateTables(db) == False
+    conn = SB.DbConnection(db['port_dev'], db['host_dev'])
+    assert SB.CreateTables(db, conn) == False
 
   def test_that_data_load_function_works(self):
     db = Config.LoadConfig()['database'][0]
-    assert SB.LoadTestData('ebola-data-db-format.csv', db, True) == True
-    assert SB.LoadTestData('xxxxx.csv', db, True) == False
+    conn = SB.DbConnection(db['port_dev'], db['host_dev'])
+    assert SB.LoadTestData(TEST_DATA, db, conn, True) == True
+    assert SB.LoadTestData('xxxxx.csv', db, conn, True) == False
 
   def test_that_record_writting_fail_gracefully(self):
     db = Config.LoadConfig()['database'][0]
     db['name'] = 'non_existent_table'
-    assert SB.LoadTestData('ebola-data-db-format.csv', db, True) == False
+    assert SB.LoadTestData(TEST_DATA, db, True) == False
 
 
 

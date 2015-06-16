@@ -18,6 +18,9 @@ apt-get install screen
 apt-get install tree
 apt-get install git
 
+## Installing NGINX
+sudo apt-get install nginx
+
 ## Running rethinkdb server.
 rethinkdb --io-threads 2048 --daemon
 ulimit -S -n 2048
@@ -29,4 +32,4 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 ## Setting-up database.
-python $SCRIPTS_PATH/setup_db.py
+python $SCRIPTS_PATH/config/

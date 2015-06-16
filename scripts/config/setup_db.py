@@ -18,12 +18,10 @@ def DbConnection(port, host):  # default
     print "Could not connect to RethinkDb on port %s" % port
     return False
 
-db = LoadConfig()['database'][0]
-conn = DbConnection(db['port_dev'], db['host_dev'])
 
-
-def DropTable(name):
+def DropTable(name, conn):
   '''Dropping tables -- for clean-up.'''
+
   try:
     r.db_drop(name).run(conn)
     return True
@@ -33,7 +31,7 @@ def DropTable(name):
     return False
 
 
-def CreateDatabase(name, v = False):
+def CreateDatabase(name, conn, v = False):
   '''Creating a database.'''
 
   if v:
@@ -42,7 +40,7 @@ def CreateDatabase(name, v = False):
   l = r.db_list().run(conn)
 
   if name in l:
-    if v: 
+    if v:
       print "Database `%s` already exists." % name
     return True
 
@@ -55,7 +53,7 @@ def CreateDatabase(name, v = False):
     return False
 
 
-def CreateTables(db, v = False):
+def CreateTables(db, conn, v = False):
   '''Creating tables in database.'''
 
   if v:
@@ -66,14 +64,14 @@ def CreateTables(db, v = False):
   for t in tables:
 
     if t['id'] in l:
-      if v: 
+      if v:
         print "Table `%s` already exists." % t['id']
       continue
 
     else:
       try:
         r.db(db['name']).table_create(t['id']).run(conn)
-        if v: 
+        if v:
           print "Table `%s` created." % t['id']
 
       except Exception as e:
@@ -81,11 +79,13 @@ def CreateTables(db, v = False):
         return False
 
 
-def LoadTestData(file, db, v = False):
+def LoadTestData(file, db, conn, v = False):
   '''Loading test data into the database.'''
 
   ## Loading data.
-  path = os.path.join(dir, 'test_data', file)
+  data_dir = os.path.split(dir)[0]
+  path = os.path.join(data_dir, 'tests', 'data', file)
+  print path
   try:
     with open(path) as csv_file:
       data = csv.DictReader(csv_file)
@@ -116,13 +116,29 @@ def LoadTestData(file, db, v = False):
 
 
 
-def Main(t = True, v = False):
+def Main(t = False, v = True):
   '''Wrapper.'''
-  CreateDatabase(db['name'])
-  CreateTables(db)
+
+  #
+  # Load configuration.
+  #
+  db = LoadConfig()['database'][0]
+
+  if db != False:
+    conn = DbConnection(db['port_dev'], db['host_dev'])
+
+  else:
+    print 'Could not connect to RethingDb instance.'
+    return False
+
+  #
+  # Create database and tables.
+  #
+  CreateDatabase(db['name'], conn=conn)
+  CreateTables(db, conn=conn)
 
   if t:
-    LoadTestData('ebola-data-db-format.csv', db)
+    LoadTestData(file='ebola-data-db-format.csv', conn=conn, db=db)
 
   if v:
     print "Setup ran successfully."

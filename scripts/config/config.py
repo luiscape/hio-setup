@@ -9,8 +9,11 @@ dir = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
 
 def LoadConfig(j = 'config.json'):
   '''Load configuration from config folder.'''
+  
+  data_dir = os.path.split(dir)[0]
+
   try:
-    j = os.path.join(dir, 'config', j)
+    j = os.path.join(data_dir, 'config', j)
     with open(j) as json_file:    
       return json.load(json_file)[0]
 
